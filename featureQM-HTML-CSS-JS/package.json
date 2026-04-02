@@ -1,0 +1,15 @@
+{
+  "name": "quantity-measurement-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Quantity Measurement App (HTML/CSS/JS + JSON Server).",
+  "scripts": {
+    "server": "json-server --watch db.json --port 3000",
+    "start": "npx http-server -p 5174 -c-1 .",
+    "start:5173": "npx http-server -p 5173 -c-1 ."
+  },
+  "devDependencies": {
+    "json-server": "^1.0.0-beta.3",
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <script src="./auth.js"></script>
+    <script>
+      window.QMAuth?.redirectIfSignedIn?.();
+    </script>
+    <main class="authPage">
+      <section class="authSplit authSplit--single">
+        <section class="authRight" aria-label="Login form">
+          <div class="authCard">
+            <div class="authTabs" role="tablist" aria-label="Auth tabs">
+              <a class="authTab isActive" href="./login.html" role="tab" aria-selected="true">Login</a>
+              <a class="authTab" href="./signup.html" role="tab" aria-selected="false">Signup</a>
+            </div>
+            <form id="loginForm" class="authForm" autocomplete="on">
+              <div class="fieldGroup">
+                <label class="label" for="email">Email ID</label>
+                <input id="email" class="input" type="email" placeholder="you@example.com" />
+              </div>
+              <div class="fieldGroup">
+                <label class="label" for="password">Password</label>
+                <input id="password" class="input" type="password" placeholder="Your password" />
+              </div>
+              <div class="authActions authActions--single">
+                <button class="signupBtn" type="submit">Login</button>
+              </div>
+              <div id="loginStatus" class="statusText" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script>
+      (function preserveAuthQuery() {
+        var q = window.location.search;
+        if (!q) return;
+        document.querySelectorAll('.authTabs a.authTab').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (!href) return;
+          var path = href.split('?')[0];
+          a.setAttribute('href', path + q);
+        });
+      })();
+    </script>
+    <script src="./login.js"></script>
+  </body>
+</html>

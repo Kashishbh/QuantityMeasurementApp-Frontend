@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <script src="./auth.js"></script>
+    <script>
+      window.QMAuth?.redirectIfSignedIn?.();
+    </script>
+    <main class="authPage">
+      <section class="authSplit authSplit--single">
+        <section class="authRight" aria-label="Signup form">
+          <div class="authCard">
+            <div class="authTabs" role="tablist" aria-label="Auth tabs">
+              <a class="authTab" href="./login.html" role="tab" aria-selected="false">Login</a>
+              <a class="authTab isActive" href="./signup.html" role="tab" aria-selected="true">Signup</a>
+            </div>
+            <form id="signupForm" class="authForm" autocomplete="on">
+              <div class="fieldGroup">
+                <label class="label" for="fullName">Full Name</label>
+                <input id="fullName" class="input" name="fullName" placeholder="Your full name" />
+              </div>
+              <div class="fieldGroup">
+                <label class="label" for="email">Email ID</label>
+                <input id="email" class="input" name="email" type="email" placeholder="you@example.com" />
+              </div>
+              <div class="fieldGroup">
+                <label class="label" for="password">Password</label>
+                <div class="inputRow inputRow--password">
+                  <input id="password" class="input" name="password" type="password" placeholder="Create a password" />
+                  <button id="pwToggle" class="iconBtn pwBtn" type="button" aria-label="Toggle password visibility">👁</button>
+                </div>
+              </div>
+              <div class="fieldGroup">
+                <label class="label" for="mobile">Mobile Number</label>
+                <input id="mobile" class="input" name="mobile" inputmode="numeric" placeholder="e.g., 9876543210" />
+              </div>
+              <div class="authActions authActions--single">
+                <button class="signupBtn" type="submit">Signup</button>
+              </div>
+              <div id="goHistoryWrap" class="goHistoryWrap" hidden>
+                <button id="goHistoryBtn" class="ghostBtn" type="button">Go to History</button>
+              </div>
+              <div id="signupStatus" class="statusText" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script>
+      (function preserveAuthQuery() {
+        var q = window.location.search;
+        if (!q) return;
+        document.querySelectorAll('.authTabs a.authTab').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (!href) return;
+          var path = href.split('?')[0];
+          a.setAttribute('href', path + q);
+        });
+      })();
+    </script>
+    <script src="./signup.js"></script>
+  </body>
+</html>

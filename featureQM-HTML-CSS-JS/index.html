@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantity Measurement App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <script src="./auth.js"></script>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <div class="brand" aria-label="Application logo">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span id="userNameText" class="brand__name"></span>
+        </div>
+        <div class="topActions">
+          <a id="loginLink" class="ghostBtn" href="./login.html">Login</a>
+          <button id="logoutBtn" class="ghostBtn" type="button" hidden>Logout</button>
+          <button id="historyBtn" class="ghostBtn" type="button" aria-haspopup="dialog">History</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="banner" role="status" aria-live="polite">
+        <div class="banner__chip" aria-hidden="true">👉</div>
+        <div class="banner__text">Welcome To Quantity Measurement App</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__head">
+          <h1 class="panel__title">Quantity Measurement App</h1>
+          <p class="panel__sub">
+            Choose measurement type, operation, values and units. CONVERT uses value1 + unit1 → unit2 only.
+          </p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Measurement types">
+          <button class="tab isActive" type="button" role="tab" aria-selected="true" data-type="length">Length</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-type="temperature">Temperature</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-type="volume">Volume</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-type="weight">Weight</button>
+        </div>
+
+        <div id="converter" class="converter" aria-label="Measurement form">
+          <div class="fieldGroup">
+            <label class="label" for="operation">Operation</label>
+            <select id="operation" class="select" aria-label="Operation">
+              <option value="convert">CONVERT</option>
+              <option value="compare">COMPARE</option>
+              <option value="add">ADD</option>
+              <option value="subtract">SUBTRACT</option>
+              <option value="divide">DIVIDE</option>
+            </select>
+          </div>
+
+          <div class="fieldGroup">
+            <label class="label" for="value1">Value 1</label>
+            <div class="inputRow">
+              <input id="value1" class="input" inputmode="decimal" autocomplete="off" placeholder="e.g., 1" />
+              <select id="unit1" class="select" aria-label="Unit 1"></select>
+            </div>
+          </div>
+
+          <div class="swapWrap">
+            <button id="swapBtn" class="swapBtn" type="button" aria-label="Swap unit 1 and unit 2">⇄</button>
+          </div>
+
+          <div id="rowSecond" class="fieldGroup">
+            <div class="inputRow inputRow--dual">
+              <div id="wrapValue2" class="fieldGroup fieldGroup--tight">
+                <label id="labelValue2" class="label" for="value2">Value 2</label>
+                <input id="value2" class="input" inputmode="decimal" autocomplete="off" placeholder="e.g., 2" />
+              </div>
+              <div class="fieldGroup fieldGroup--tight">
+                <label id="labelUnit2" class="label" for="unit2">Unit 2</label>
+                <select id="unit2" class="select" aria-label="Unit 2"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="fieldGroup">
+            <label class="label" for="resultValue">Result</label>
+            <input id="resultValue" class="input isOutput" readonly aria-readonly="true" />
+          </div>
+
+          <div class="metaRow">
+            <div id="statusText" class="statusText" role="status" aria-live="polite"></div>
+            <button id="saveBtn" class="primaryBtn" type="button">Save to History</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="historyModal" class="modal" role="dialog" aria-modal="true" aria-label="Conversion history" hidden>
+      <div class="modal__backdrop" data-close="true"></div>
+      <div class="modal__panel" role="document">
+        <div class="modal__head">
+          <div>
+            <div class="modal__title">History</div>
+            <div class="modal__subtitle">Saved conversions from JSON Server</div>
+          </div>
+          <button class="iconBtn" type="button" data-close="true" aria-label="Close history">✕</button>
+        </div>
+        <div class="modal__body">
+          <div class="historyActions">
+            <button id="refreshHistoryBtn" class="ghostBtn" type="button">Refresh</button>
+            <button id="clearHistoryBtn" class="dangerBtn" type="button">Clear All</button>
+          </div>
+          <div id="historyError" class="errorBox" hidden></div>
+          <div id="historyList" class="historyList" aria-label="History list"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
