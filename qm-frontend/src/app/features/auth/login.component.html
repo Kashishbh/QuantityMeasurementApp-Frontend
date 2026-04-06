@@ -1,0 +1,40 @@
+<div class="auth-page">
+  <div class="card" role="region" aria-labelledby="login-title">
+    <h1 id="login-title" class="title">Login (guest)</h1>
+    <p class="subtitle">Sign in with a name and password, or continue as a guest.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="login-user">User name</label>
+        <input id="login-user" type="text" formControlName="userName" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="login-pass">Password</label>
+        <div class="password-wrap">
+          <input
+            id="login-pass"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+          <button type="button" class="toggle-pw" (click)="togglePassword()">
+            {{ showPassword() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </div>
+      @if (errorMessage) {
+        <div class="alert" role="alert">{{ errorMessage }}</div>
+      }
+      <button type="submit" class="btn-primary full">Login</button>
+    </form>
+
+    <button type="button" class="btn-secondary full" (click)="guestLogin()">
+      Continue as guest
+    </button>
+
+    <p class="footer-line">
+      No account?
+      <a routerLink="/signup" [queryParams]="route.snapshot.queryParams">Sign up</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+<section class="features" id="features" aria-label="How does it work?">
+  <div class="container">
+    <h2 class="section-title">How does it work?</h2>
+    <p class="section-description">{{ description }}</p>
+
+    <div class="cards" role="list">
+      @for (c of cards; track c.title) {
+        <article class="card" role="listitem">
+          <div class="icon-circle" aria-hidden="true">
+            @if (c.icon === 'convert') {
+              <svg viewBox="0 0 24 24" class="icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M4 7h10M4 12h16M4 17h10"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M16 6l4 1-1 4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+            @if (c.icon === 'compare') {
+              <svg viewBox="0 0 24 24" class="icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M4 19V5m0 14h16"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M8 15l3-4 2 2 3-6"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            }
+            @if (c.icon === 'history') {
+              <svg viewBox="0 0 24 24" class="icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M7 3h10v2H7V3Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M7 7h10v14H7V7Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9.5 11h5M9.5 14h5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            }
+          </div>
+
+          <h3 class="card-title">{{ c.title }}</h3>
+          <p class="card-description">{{ c.description }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+

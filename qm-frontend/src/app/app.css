@@ -1,0 +1,125 @@
+.shell {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--qm-bg);
+  color: var(--qm-text);
+  overflow: hidden;
+}
+
+.shell::before {
+  content: '';
+  position: absolute;
+  inset: -220px;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      color-mix(in srgb, var(--qm-primary-light) 18%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      color-mix(in srgb, var(--qm-primary) 14%, transparent),
+      transparent 60%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-banner {
+  padding: 0.85rem 1.25rem;
+  text-align: center;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--qm-primary) 18%, transparent),
+    color-mix(in srgb, var(--qm-primary-light) 12%, transparent)
+  );
+  border-bottom: 1px solid var(--qm-border);
+}
+
+.welcome-title {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  font-weight: 600;
+  color: var(--qm-text);
+}
+
+.welcome-subtitle {
+  margin: 0.45rem auto 0;
+  max-width: 64ch;
+  font-size: 0.95rem;
+  color: var(--qm-text-muted);
+}
+
+.welcome-banner {
+  animation: qmFadeDown 520ms ease both;
+}
+
+@keyframes qmFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes qmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes qmResultPop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes qmModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-banner {
+    animation: none;
+  }
+}
+
+.main {
+  flex: 1;
+  padding: 1rem 1.75rem 2rem;
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
