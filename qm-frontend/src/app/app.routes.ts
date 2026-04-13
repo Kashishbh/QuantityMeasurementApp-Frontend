@@ -16,5 +16,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/signup.component').then((m) => m.SignupComponent),
   },
+  {
+    path: 'oauth-callback',
+    loadComponent: () =>
+      import('./features/auth/oauth-callback.component').then((m) => m.OauthCallbackComponent),
+  },
   { path: '**', redirectTo: '' },
 ];

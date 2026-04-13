@@ -7,6 +7,8 @@ export class HistoryUiService {
 
   open(): void {
     this.isOpen.set(true);
+    // Bumps reload tick so the modal (when mounted) always refetches; also helps any future always-mounted UI.
+    this.reloadTick.update((v) => v + 1);
   }
 
   close(): void {

@@ -20,9 +20,12 @@ import { ThemeService } from '../core/services/theme.service';
         <a class="nav-link" href="#history" (click)="onHistoryLink($event)">History</a>
       </nav>
       <div class="header-actions">
-        @if (auth.isRegistered()) {
+        @if (auth.isSignedIn()) {
           <span class="user-pill" aria-live="polite">
             <span class="sr-only">Signed in as </span>{{ auth.user()?.userName }}
+            @if (auth.isGuest()) {
+              <span class="sr-only">(guest)</span>
+            }
           </span>
         }
         <button
@@ -34,10 +37,10 @@ import { ThemeService } from '../core/services/theme.service';
         >
           {{ theme.mode() === 'dark' ? '☀️' : '🌙' }}
         </button>
-        @if (auth.isRegistered()) {
+        @if (auth.isSignedIn()) {
           <button type="button" class="btn-link" (click)="logout()">Logout</button>
         } @else {
-          <a routerLink="/login" class="btn-link">Login (guest)</a>
+          <a routerLink="/login" class="btn-link">Login</a>
         }
         <button type="button" class="btn-primary header-history" (click)="onHistory()">
           History
@@ -65,7 +68,7 @@ export class AppHeaderComponent {
 
   onHistory(): void {
     if (!this.auth.canViewHistory()) {
-      void this.router.navigate(['/signup'], { queryParams: { next: 'history' } });
+      void this.router.navigate(['/login'], { queryParams: { next: 'history' } });
       return;
     }
     this.historyUi.open();

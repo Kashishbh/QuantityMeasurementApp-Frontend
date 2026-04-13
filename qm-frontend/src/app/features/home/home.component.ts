@@ -1,31 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import type {
   MeasurementType,
   Operation,
 } from '../../core/models/measurement.models';
+import { describeHttpError } from '../../core/http/http-error';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
-import { HistoryService } from '../../core/services/history.service';
 import { HistoryUiService } from '../../core/services/history-ui.service';
+import { MeasurementApiService } from '../../core/services/measurement-api.service';
 import { MeasurementService } from '../../core/services/measurement.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly measurement = inject(MeasurementService);
-  private readonly historyApi = inject(HistoryService);
+  private readonly measurementApi = inject(MeasurementApiService);
   private readonly historyUi = inject(HistoryUiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   protected readonly form = this.fb.group({
     measurementType: this.fb.nonNullable.control<MeasurementType>('LENGTH'),
@@ -38,8 +41,6 @@ export class HomeComponent {
 
   protected resultText = '';
   protected errorMessage = '';
-  protected saveMessage = '';
-  protected saveError = '';
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -93,8 +94,6 @@ export class HomeComponent {
   protected compute(): void {
     this.errorMessage = '';
     this.resultText = '';
-    this.saveMessage = '';
-    this.saveError = '';
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -122,12 +121,40 @@ export class HomeComponent {
       }
     }
 
+    if (environment.useBackendMeasurement) {
+      const userId = this.auth.backendUserId();
+      this.measurementApi.runOperation(op, type, v1, unit1, v2, unit2, userId).subscribe({
+        next: (raw) => {
+          if (op === 'COMPARE') {
+            this.resultText = this.compareOutcomeLabel(raw);
+            this.afterMeasurementSuccess();
+            return;
+          }
+          if (typeof raw === 'number') {
+            if (op === 'CONVERT') {
+              this.resultText = this.formatWithUnit(raw, unit2);
+            } else {
+              this.resultText = this.formatWithUnit(raw, unit1);
+            }
+            this.afterMeasurementSuccess();
+            return;
+          }
+          this.errorMessage = 'Unexpected response from server.';
+          this.cdr.markForCheck();
+        },
+        error: (e: unknown) => {
+          this.errorMessage = describeHttpError(e);
+          this.cdr.markForCheck();
+        },
+      });
+      return;
+    }
+
     try {
       const res = this.measurement.compute(type, op, v1, unit1, v2, unit2);
       if (res.kind === 'convert') {
         this.resultText = this.formatWithUnit(res.valueInTargetUnit, res.targetUnit);
       } else if (res.kind === 'compare') {
-        // Backend parity: COMPARE is equality with tolerance.
         this.resultText =
           res.outcome === 'equal' ? 'Equal (within tolerance)' : 'Not equal';
       } else {
@@ -149,47 +176,6 @@ export class HomeComponent {
       value1: v2,
       value2: v1,
     });
-  }
-
-  protected saveToHistory(): void {
-    this.saveMessage = '';
-    this.saveError = '';
-    if (!this.resultText) {
-      this.saveError = 'Run a calculation first.';
-      return;
-    }
-
-    const type = this.form.controls.measurementType.getRawValue();
-    const op = this.form.controls.operation.getRawValue();
-    const v1 = this.form.controls.value1.getRawValue();
-    const u1 = this.form.controls.unit1.getRawValue();
-    const v2 = this.form.controls.value2.getRawValue();
-    const u2 = this.form.controls.unit2.getRawValue();
-
-    const expression =
-      op === 'CONVERT'
-        ? `${v1} ${u1} → ${u2}`
-        : `${v1} ${u1}, ${v2} ${u2}`;
-
-    this.historyApi
-      .save({
-        measurementType: type,
-        operation: op,
-        expression,
-        resultSummary: this.resultText,
-      })
-      .subscribe({
-        next: () => {
-          this.saveMessage = 'Saved to history.';
-          if (this.historyUi.isOpen()) {
-            // If the modal is currently open, refresh it so the new entry appears immediately.
-            this.historyUi.requestReload();
-          }
-        },
-        error: (err: Error) => {
-          this.saveError = err.message;
-        },
-      });
   }
 
   private applyDefaultsForType(t: MeasurementType): void {
@@ -228,5 +214,23 @@ export class HomeComponent {
   private formatWithUnit(value: number, unit: string): string {
     const u = unit.trim();
     return u ? `${this.formatNum(value)} ${u}` : this.formatNum(value);
+  }
+
+  private compareOutcomeLabel(raw: boolean | number | string): string {
+    if (raw === true || raw === 'true') {
+      return 'Equal (within tolerance)';
+    }
+    if (raw === false || raw === 'false') {
+      return 'Not equal';
+    }
+    return 'Not equal';
+  }
+
+  /** Lets the history modal refetch if it is open; server saves history when userId is sent on Calculate. */
+  private afterMeasurementSuccess(): void {
+    this.cdr.markForCheck();
+    if (this.auth.isRegistered()) {
+      this.historyUi.requestReload();
+    }
   }
 }

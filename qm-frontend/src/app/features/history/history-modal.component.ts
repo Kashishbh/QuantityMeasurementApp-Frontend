@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, effect, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, effect, inject } from '@angular/core';
+import { describeHttpError } from '../../core/http/http-error';
 import type { HistoryEntryDto } from '../../core/models/history.models';
 import { HistoryService } from '../../core/services/history.service';
 import { HistoryUiService } from '../../core/services/history-ui.service';
@@ -11,8 +12,9 @@ import { HistoryUiService } from '../../core/services/history-ui.service';
   styleUrl: './history-modal.component.css',
 })
 export class HistoryModalComponent {
-  private readonly historyApi = inject(HistoryService);
+  protected readonly historyApi = inject(HistoryService);
   protected readonly historyUi = inject(HistoryUiService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   protected entries: HistoryEntryDto[] = [];
   protected loading = false;
@@ -34,10 +36,12 @@ export class HistoryModalComponent {
       next: (rows) => {
         this.entries = rows;
         this.loading = false;
+        this.cdr.markForCheck();
       },
-      error: (err: Error) => {
-        this.errorMessage = err.message;
+      error: (err: unknown) => {
+        this.errorMessage = describeHttpError(err);
         this.loading = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -50,8 +54,9 @@ export class HistoryModalComponent {
         this.entries = [];
         this.clearMessage = 'History cleared.';
       },
-      error: (err: Error) => {
-        this.errorMessage = err.message;
+      error: (err: unknown) => {
+        this.errorMessage = describeHttpError(err);
+        this.cdr.markForCheck();
       },
     });
   }

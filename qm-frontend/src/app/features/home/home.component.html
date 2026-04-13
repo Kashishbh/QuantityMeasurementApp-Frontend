@@ -84,13 +84,16 @@
     </div>
   }
 
-  <div class="history-save">
-    <button type="button" class="btn-outline" (click)="saveToHistory()">Save to history</button>
-    @if (saveMessage) {
-      <span class="ok">{{ saveMessage }}</span>
-    }
-    @if (saveError) {
-      <span class="err" role="alert">{{ saveError }}</span>
+  <div class="history-hint">
+    @if (auth.isRegistered()) {
+      <p class="hint">Your calculations are saved to account history when you use Calculate.</p>
+    } @else {
+      <p class="hint">
+        <a routerLink="/login" [queryParams]="{ next: 'history' }">Sign in</a>
+        or
+        <a routerLink="/signup" [queryParams]="{ next: 'history' }">sign up</a>
+        to save and view history. The converter works without an account.
+      </p>
     }
   </div>
   </form>

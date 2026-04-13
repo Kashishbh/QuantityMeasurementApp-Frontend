@@ -10,15 +10,20 @@
     <h2 id="history-heading">History</h2>
     <button type="button" class="btn-close" (click)="close()" aria-label="Close history">×</button>
   </div>
-  <p class="hint">Newest entries first. Clear all removes every saved item when the server allows it.</p>
+  <p class="hint">
+    Newest first. Entries appear after you use <strong>Calculate</strong> while signed in (not as guest). Saving
+    requires user-service and measurement-service to be running.
+  </p>
 
   <div class="toolbar">
     <button type="button" class="btn-secondary" (click)="load()" [disabled]="loading">
       {{ loading ? 'Refreshing…' : 'Refresh' }}
     </button>
-    <button type="button" class="btn-danger" (click)="clearAll()" [disabled]="loading || entries.length === 0">
-      Clear all
-    </button>
+    @if (historyApi.canClearAll()) {
+      <button type="button" class="btn-danger" (click)="clearAll()" [disabled]="loading || entries.length === 0">
+        Clear all
+      </button>
+    }
   </div>
 
   @if (errorMessage) {
@@ -29,7 +34,10 @@
   }
 
   @if (!loading && entries.length === 0 && !errorMessage) {
-    <p class="empty">No history yet. Save a calculation from the dashboard.</p>
+    <p class="empty">
+      No history yet. Log in (not guest), run at least one successful <strong>Calculate</strong>, then open History
+      again or press Refresh.
+    </p>
   }
 
   <ul class="list" aria-live="polite">
