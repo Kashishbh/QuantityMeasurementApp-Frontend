@@ -1,0 +1,85 @@
+.features {
+  padding: 2.75rem 1rem 2.75rem;
+  scroll-margin-top: 72px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.section-description {
+  margin: 0.75rem auto 2rem;
+  max-width: 70ch;
+  font-size: 1.02rem;
+  color: var(--qm-text-muted);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.card {
+  padding: 1.5rem 1.25rem;
+  border: 1px solid var(--qm-border);
+  border-radius: 0.9rem;
+  background: var(--qm-surface-elevated);
+  box-shadow: var(--qm-card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+}
+
+.icon-circle {
+  width: 66px;
+  height: 66px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--qm-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--qm-primary) 30%, var(--qm-border));
+  color: var(--qm-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+}
+
+.card-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.card-description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--qm-text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section-description {
+    margin-bottom: 1.25rem;
+  }
+}
+

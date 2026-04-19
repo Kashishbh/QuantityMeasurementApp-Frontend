@@ -1,0 +1,55 @@
+<div class="backdrop" (click)="close()" aria-hidden="true"></div>
+<div
+  class="dialog"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="history-heading"
+  (click)="$event.stopPropagation()"
+>
+  <div class="dialog-header">
+    <h2 id="history-heading">History</h2>
+    <button type="button" class="btn-close" (click)="close()" aria-label="Close history">×</button>
+  </div>
+  <p class="hint">
+    Newest first. Entries appear after you use <strong>Calculate</strong> while signed in (not as guest). Saving
+    requires user-service and measurement-service to be running.
+  </p>
+
+  <div class="toolbar">
+    <button type="button" class="btn-secondary" (click)="load()" [disabled]="loading">
+      {{ loading ? 'Refreshing…' : 'Refresh' }}
+    </button>
+    @if (historyApi.canClearAll()) {
+      <button type="button" class="btn-danger" (click)="clearAll()" [disabled]="loading || entries.length === 0">
+        Clear all
+      </button>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert" role="alert">{{ errorMessage }}</div>
+  }
+  @if (clearMessage) {
+    <div class="ok" role="status">{{ clearMessage }}</div>
+  }
+
+  @if (!loading && entries.length === 0 && !errorMessage) {
+    <p class="empty">
+      No history yet. Log in (not guest), run at least one successful <strong>Calculate</strong>, then open History
+      again or press Refresh.
+    </p>
+  }
+
+  <ul class="list" aria-live="polite">
+    @for (e of entries; track e.id) {
+      <li class="item">
+        <div class="meta">
+          <time [attr.datetime]="e.createdAt">{{ e.createdAt | date: 'medium' }}</time>
+          <span class="badge">{{ e.measurementType }} · {{ e.operation }}</span>
+        </div>
+        <div class="expr">{{ e.expression }}</div>
+        <div class="res">{{ e.resultSummary }}</div>
+      </li>
+    }
+  </ul>
+</div>

@@ -1,0 +1,9 @@
+<div class="shell">
+  <app-header />
+  <main class="main" id="main-content">
+    <router-outlet />
+  </main>
+  @if (historyUi.isOpen()) {
+    <app-history-modal />
+  }
+</div>

@@ -1,0 +1,100 @@
+<section class="converter" aria-labelledby="converter-title">
+  <form [formGroup]="form" novalidate>
+  <h2 id="converter-title" class="panel-title">Measurement</h2>
+
+  <div class="tabs" role="tablist" aria-label="Measurement type">
+    @for (t of measurementTypes; track t) {
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        [attr.aria-selected]="form.controls.measurementType.value === t"
+        [class.active]="form.controls.measurementType.value === t"
+        (click)="form.patchValue({ measurementType: t })"
+      >
+        {{ t }}
+      </button>
+    }
+  </div>
+
+  <fieldset class="field-row">
+    <legend class="legend">Operation</legend>
+    <div class="op-grid">
+      @for (o of operations; track o) {
+        <label class="radio-chip">
+          <input type="radio" formControlName="operation" [value]="o" />
+          <span>{{ o }}</span>
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <div class="grid-inputs">
+    <div class="field">
+      <label for="value1">Value 1</label>
+      <input id="value1" type="text" formControlName="value1" autocomplete="off" inputmode="decimal" />
+    </div>
+    <div class="field">
+      <label for="unit1">Unit 1</label>
+      <select id="unit1" formControlName="unit1">
+        @for (u of units(); track u) {
+          <option [value]="u">{{ u }}</option>
+        }
+      </select>
+    </div>
+
+    @if (showSecondRow()) {
+      <div class="field">
+        <label for="value2">Value 2</label>
+        <input id="value2" type="text" formControlName="value2" autocomplete="off" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <label for="unit2">Unit 2</label>
+        <select id="unit2" formControlName="unit2">
+          @for (u of units(); track u) {
+            <option [value]="u">{{ u }}</option>
+          }
+        </select>
+      </div>
+    } @else {
+      <div class="field span-2 convert-target">
+        <label for="unit2c">Target unit</label>
+        <select id="unit2c" formControlName="unit2">
+          @for (u of units(); track u) {
+            <option [value]="u">{{ u }}</option>
+          }
+        </select>
+      </div>
+    }
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-secondary" (click)="swapUnits()">Swap units</button>
+    <button type="button" class="btn-primary" (click)="compute()">Calculate</button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert error" role="alert">{{ errorMessage }}</div>
+  }
+
+  @if (resultText) {
+    <div class="result" aria-live="polite">
+      <div class="result-label">Result</div>
+      <div class="result-value">{{ resultText }}</div>
+    </div>
+  }
+
+  <div class="history-hint">
+    @if (auth.isRegistered()) {
+      <p class="hint">Your calculations are saved to account history when you use Calculate.</p>
+    } @else {
+      <p class="hint">
+        <a routerLink="/login" [queryParams]="{ next: 'history' }">Sign in</a>
+        or
+        <a routerLink="/signup" [queryParams]="{ next: 'history' }">sign up</a>
+        to save and view history. The converter works without an account.
+      </p>
+    }
+  </div>
+  </form>
+</section>

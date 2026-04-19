@@ -1,0 +1,65 @@
+/* Global design tokens — light (default) and dark via data-theme on <html> */
+
+:root {
+  --qm-primary: #1a8a8a;
+  --qm-primary-light: #2c9c9c;
+  --qm-primary-dark: #157676;
+  --qm-text: #333333;
+  --qm-text-muted: #4f6767;
+  --qm-bg: #f6fbfb;
+  --qm-surface: #ffffff;
+  --qm-surface-elevated: #fbfefe;
+  --qm-border: #d6e6e6;
+  --qm-card-bg: #ffffff;
+  --qm-card-shadow: 0 2px 14px color-mix(in srgb, var(--qm-primary) 10%, transparent);
+  --qm-input-bg: #ffffff;
+  --qm-danger: #c62828;
+  --qm-success: #2e7d32;
+}
+
+html[data-theme='dark'] {
+  --qm-text: #e8eaed;
+  --qm-text-muted: #b0b4ba;
+  --qm-bg: #121416;
+  --qm-surface: #1b1e22;
+  --qm-surface-elevated: #23272d;
+  --qm-border: #3a3f46;
+  --qm-card-bg: #1b1e22;
+  --qm-card-shadow: 0 4px 20px color-mix(in srgb, #000 45%, transparent);
+  --qm-input-bg: #23272d;
+  --qm-primary-dark: #5ec8c8;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  line-height: 1.5;
+  background: var(--qm-bg);
+  color: var(--qm-text);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--qm-primary-light);
+  outline-offset: 2px;
+}
