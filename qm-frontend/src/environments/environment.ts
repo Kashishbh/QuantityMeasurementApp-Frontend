@@ -4,5 +4,5 @@ export const environment = {
   useMockHistory: false,
   useBackendMeasurement: true,
 
-  googleOAuthAuthorizeUrl: 'https://api-gateway-q7dd.onrender.com/oauth2/authorization/google',
+  googleOAuthAuthorizeUrl: 'https://user-service-5gma.onrender.com/oauth2/authorization/google',
 };
