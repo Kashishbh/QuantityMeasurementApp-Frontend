@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api-gateway-q7dd.onrender.com',
+  apiUrl: 'http://localhost:8080',
   useMockHistory: false,
   useBackendMeasurement: true,
 
-  googleOAuthAuthorizeUrl: 'https://user-service-5gma.onrender.com/oauth2/authorization/google',
+  googleOAuthAuthorizeUrl: 'http://localhost:8080/oauth2/authorization/google',
 };
